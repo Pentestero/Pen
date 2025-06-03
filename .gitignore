@@ -1,0 +1,18 @@
+# Java
+/.gradle
+/build/
+.DS_Store
+*.log
+*.class
+
+# Node
+/node_modules
+.env
+build
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
