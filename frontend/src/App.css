@@ -1,38 +1,164 @@
+/* Styles généraux pour l'application */
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  min-height: 100vh; /* La hauteur minimale est de 100% de la hauteur de la fenêtre */
+  background-color: #282c34; /* Couleur de fond sombre */
+  color: white; /* Texte blanc */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police de caractères moderne */
+}
+
+/* En-tête de l'application */
+.App-header {
+  background-color: #20232a; /* Couleur de fond légèrement plus foncée */
+  padding: 20px;
+  border-bottom: 1px solid #61dafb; /* Bordure inférieure accentuée */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Ombre douce */
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 2.2em;
+  color: #61dafb; /* Couleur bleue vibrante, typique de React */
+}
+
+/* Conteneur principal du chat */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Permet au conteneur de prendre l'espace disponible */
+  max-width: 800px; /* Largeur maximale pour le chat */
+  width: 90%; /* Occupe 90% de la largeur disponible */
+  margin: 20px auto; /* Centre le conteneur horizontalement */
+  border: 1px solid #61dafb; /* Bordure assortie à l'en-tête */
+  border-radius: 10px; /* Coins arrondis */
+  overflow: hidden; /* Cache le contenu qui déborde */
+  background-color: #1a1b20; /* Arrière-plan du chat */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Ombre plus prononcée */
+}
+
+/* Liste des messages */
+.messages-list {
+  flex-grow: 1; /* Prend l'espace restant pour les messages */
+  padding: 15px;
+  overflow-y: auto; /* Active le défilement vertical si nécessaire */
+  display: flex;
+  flex-direction: column; /* Les messages s'empilent verticalement */
+  gap: 8px; /* Espacement entre les messages */
+}
+
+.no-messages-text {
+  color: #a0a0a0;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Style d'un message individuel */
+.message {
+  padding: 10px 15px;
+  border-radius: 18px; /* Bords très arrondis pour les bulles de chat */
+  max-width: 70%; /* Limite la largeur des bulles */
+  text-align: left;
+  word-wrap: break-word; /* Gère les mots longs qui débordent */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Légère ombre sur chaque bulle */
+}
+
+/* Style pour mes propres messages */
+.my-message {
+  align-self: flex-end; /* Aligné à droite */
+  background-color: #007bff; /* Bleu vif */
   color: white;
+  margin-left: auto; /* Pousse le message vers la droite */
 }
 
-.App-link {
-  color: #61dafb;
+/* Style pour les messages des autres utilisateurs */
+.other-message {
+  align-self: flex-start; /* Aligné à gauche */
+  background-color: #3e414c; /* Gris foncé */
+  color: white;
+  margin-right: auto; /* Pousse le message vers la gauche */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* En-tête du message (expéditeur et horodatage) */
+.message-header {
+  font-size: 0.8em;
+  color: #c0c0c0; /* Gris clair pour l'info */
+  margin-bottom: 3px; /* Espacement avec le contenu du message */
+  display: flex;
+  justify-content: space-between; /* Expéditeur à gauche, horodatage à droite */
+  align-items: baseline;
+}
+
+.sender {
+  font-weight: bold;
+  margin-right: 5px;
+  color: #61dafb; /* Couleur d'accent pour l'expéditeur */
+}
+
+.timestamp {
+  font-size: 0.7em;
+  color: #999; /* Gris plus foncé pour l'horodatage */
+}
+
+/* Contenu du message */
+.message-content {
+  font-size: 1em;
+  line-height: 1.4; /* Espacement des lignes pour la lisibilité */
+}
+
+/* Formulaire de saisie du message */
+.message-input-form {
+  display: flex;
+  padding: 15px;
+  border-top: 1px solid #61dafb; /* Bordure supérieure */
+  background-color: #20232a; /* Fond du formulaire */
+  gap: 10px; /* Espacement entre les champs */
+}
+
+/* Champs de saisie (nom d'utilisateur et message) */
+.username-input,
+.message-input {
+  flex-grow: 1; /* Prend l'espace disponible */
+  padding: 12px;
+  border: 1px solid #61dafb;
+  border-radius: 5px;
+  background-color: #3e414c;
+  color: white;
+  font-size: 1em;
+  outline: none; /* Supprime le contour par défaut au focus */
+  transition: border-color 0.3s ease; /* Transition douce pour la bordure */
+}
+
+.username-input:focus,
+.message-input:focus {
+  border-color: #4fa3d1; /* Changement de couleur au focus */
+}
+
+.username-input::placeholder,
+.message-input::placeholder {
+  color: #a0a0a0; /* Couleur des placeholders */
+}
+
+/* Bouton d'envoi */
+.send-button {
+  padding: 12px 25px;
+  background-color: #61dafb;
+  color: #282c34;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.1s ease; /* Transitions douces */
+  flex-shrink: 0; /* Empêche le bouton de rétrécir */
+}
+
+.send-button:hover {
+  background-color: #4fa3d1; /* Changement de couleur au survol */
+  transform: translateY(-1px); /* Légère élévation au survol */
+}
+
+.send-button:active {
+  transform: translateY(0); /* Retour à la position normale au clic */
 }
