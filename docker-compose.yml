@@ -1,39 +1,46 @@
-version: '3.8'
+# Note: L'attribut 'version' n'est plus nécessaire dans Docker Compose v2.x et est ignoré.
 
+# Définition des services de notre application
 services:
+  # Service de la base de données PostgreSQL
   db:
-    image: postgres:14-alpine
-    container_name: postgres_db
-    environment:
-      POSTGRES_DB: your_database_name # Remplacez par le nom de votre BDD
-      POSTGRES_USER: your_username    # Remplacez par votre nom d'utilisateur
-      POSTGRES_PASSWORD: your_password # Remplacez par votre mot de passe fort
+    image: postgres:16-alpine # Utilise une image PostgreSQL légère
+    container_name: messagerie-db # Nom du conteneur Docker
+    restart: always # Redémarre toujours le conteneur s'il s'arrête
+    environment: # Variables d'environnement pour la configuration de PostgreSQL
+      POSTGRES_DB: messagerie_db # Nom de la base de données
+      POSTGRES_USER: postgres # Nom d'utilisateur de la base de données
+      POSTGRES_PASSWORD: your_strong_db_password # <--- REMPLACEZ PAR UN MOT DE PASSE SÉCURISÉ !
     ports:
-      - "5432:5432" # Mappe le port 5432 du conteneur au port 5432 de l'hôte
+      - "5432:5432" # Mappe le port 5432 de l'hôte au port 5432 du conteneur
     volumes:
-      - db_data:/var/lib/postgresql/data # Volume persistant pour les données
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U your_username -d your_database_name"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - db_data:/var/lib/postgresql/data # Volume persistant pour les données de la base de données
 
+  # Service du backend Spring Boot
   backend:
-    build:
-      context: ./backend # Chemin vers le dossier de votre backend Spring Boot
-      dockerfile: Dockerfile
-    container_name: backend_app
+    build: ./backend # Indique à Docker de construire l'image à partir du Dockerfile dans le dossier './backend'
+    container_name: messagerie-backend # Nom du conteneur Docker
+    restart: always # Redémarre toujours le conteneur
     ports:
-      - "8080:8080" # Mappe le port 8080 du conteneur au port 8080 de l'hôte
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/your_database_name
-      SPRING_DATASOURCE_USERNAME: your_username
-      SPRING_DATASOURCE_PASSWORD: your_password
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update # Ou create pour la première fois
-    depends_on:
-      db:
-        condition: service_healthy # Attend que la BDD soit saine avant de démarrer
-    restart: always
+      - "8080:8080" # Mappe le port 8080 de l'hôte au port 8080 du conteneur
+    environment: # Variables d'environnement passées à l'application Spring Boot
+      DB_URL: jdbc:postgresql://db:5432/messagerie_db # 'db' est le nom du service DB dans Docker Compose
+      DB_USERNAME: postgres
+      DB_PASSWORD: sikatipierre5.0 # <--- DOIT CORRESPONDRE AU MOT DE PASSE DE LA BD !
+    depends_on: # Assure que le service DB est démarré avant le backend
+      - db
+    # La commande CMD dans le Dockerfile du backend gère l'attente de la base de données
 
+  # Service du frontend React
+  frontend:
+    build: ./frontend # Indique à Docker de construire l'image à partir du Dockerfile dans le dossier './frontend'
+    container_name: messagerie-frontend # Nom du conteneur Docker
+    restart: always # Redémarre toujours le conteneur
+    ports:
+      - "3000:80" # Mappe le port 3000 de l'hôte au port 80 du conteneur Nginx
+    depends_on: # Assure que le backend est démarré avant le frontend
+      - backend
+
+# Définition des volumes nommés pour la persistance des données
 volumes:
-  db_data: # Définition du volume
+  db_data: # Volume pour la base de données PostgreSQL
